@@ -29,11 +29,11 @@ class SignatureTest {
 
     private static Stream<Arguments> testPageParamsProvider() {
         return Stream.of(
-                Arguments.of(1, 0, Optional.of(0)),
-                Arguments.of(1,1,Optional.of(1)),
-                Arguments.of(1,2,Optional.of(2)),
-                Arguments.of(1,3,Optional.of(3)),
-                Arguments.of(1,4,Optional.empty())
+                Arguments.of(1, 0, Optional.of(3)),
+                Arguments.of(1, 1, Optional.of(0)),
+                Arguments.of(1, 2, Optional.of(1)),
+                Arguments.of(1, 3, Optional.of(2)),
+                Arguments.of(1, 4, Optional.empty())
         );
     }
 

@@ -24,6 +24,12 @@ public class Signature {
     }
 
     Optional<Integer> pageNumber(int index) {
-        return lessThanOrNone(totalNumberOfPages(),index);
+        if (index >= totalNumberOfPages()) {
+            return Optional.empty();
+        }
+        if (index % 2 == 0) {
+            return Optional.of(totalNumberOfPages() - index - 1);
+        }
+        return Optional.of(index-1);
     }
 }
