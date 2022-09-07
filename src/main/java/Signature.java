@@ -14,7 +14,10 @@ public class Signature {
         this.numberOfSheets = numberOfSheets;
     }
 
-    int pages() {
+    int totalNumberOfPages() {
         return 4 * numberOfSheets;
+    }
+    int pageNumber(int index){
+        return 0;
     }
 }
