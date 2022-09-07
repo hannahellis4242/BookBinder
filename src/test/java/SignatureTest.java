@@ -29,14 +29,18 @@ class SignatureTest {
 
     private static Stream<Arguments> testPageParamsProvider() {
         return Stream.of(
-                Arguments.of(1, 0, Optional.of(0))
+                Arguments.of(1, 0, Optional.of(0)),
+                Arguments.of(1,1,Optional.of(1)),
+                Arguments.of(1,2,Optional.of(2)),
+                Arguments.of(1,3,Optional.of(3)),
+                Arguments.of(1,4,Optional.empty())
         );
     }
 
     @ParameterizedTest
     @MethodSource("testPageParamsProvider")
     void whenGivenNumberOfSheetsAndAPageIndexShouldGiveCorrectPageNumber(int sheets, int index, Optional<Integer> expectedPageNumber) {
-        var pageNumber = Signature.withNumberOfSheets(sheets).map(s -> s.pageNumber(index));
+        var pageNumber = Signature.withNumberOfSheets(sheets).flatMap(s -> s.pageNumber(index));
         assertEquals(expectedPageNumber, pageNumber);
     }
 }
