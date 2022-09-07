@@ -1,3 +1,5 @@
+package book;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,11 +37,11 @@ public class Signature {
         }
     }
 
-    int getTotalNumberOfPages() {
+    public int getTotalNumberOfPages() {
         return totalNumberOfPages;
     }
 
-    Optional<Integer> pageNumber(int index) {
+    public Optional<Integer> pageNumber(int index) {
         try {
             return Optional.of(pageSequence.get(index));
         } catch (IndexOutOfBoundsException e) {
