@@ -1,35 +1,53 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class Signature {
     private final int numberOfSheets;
+    private final int totalNumberOfPages;
+    private final List<Integer> pageSequence;
 
-    private static Optional<Integer> greaterThanOrNone(int value, int x) {
-        return (x > value ? Optional.of(x) : Optional.empty());
-    }
-
-    private static Optional<Integer> lessThanOrNone(int value, int x) {
-        return (x < value ? Optional.of(x) : Optional.empty());
+    private static Optional<Integer> positiveOrNone(int x) {
+        return (x > 0 ? Optional.of(x) : Optional.empty());
     }
 
     public static Optional<Signature> withNumberOfSheets(int numberOfSheets) {
-        return greaterThanOrNone(0, numberOfSheets).map(Signature::new);
+        return positiveOrNone(numberOfSheets).map(Signature::new);
     }
 
     private Signature(int numberOfSheets) {
         this.numberOfSheets = numberOfSheets;
+        totalNumberOfPages = 4 * numberOfSheets;
+        pageSequence = new ArrayList<>(totalNumberOfPages);
+        int index = 0;
+        int next = totalNumberOfPages - 1;
+        while (index < totalNumberOfPages) {
+            pageSequence.add(next);
+            int step = index % 4;
+            if (step % 2 == 0) {
+                next = totalNumberOfPages - 1 - next;
+            } else if (step % 4 == 1) {
+                ++next;
+            } else if (step % 4 == 3) {
+                --next;
+            }
+            ++index;
+        }
     }
 
-    int totalNumberOfPages() {
-        return 4 * numberOfSheets;
+    int getTotalNumberOfPages() {
+        return totalNumberOfPages;
     }
 
     Optional<Integer> pageNumber(int index) {
-        if (index >= totalNumberOfPages()) {
+        try {
+            return Optional.of(pageSequence.get(index));
+        } catch (IndexOutOfBoundsException e) {
             return Optional.empty();
         }
-        if (index % 2 == 0) {
-            return Optional.of(totalNumberOfPages() - index - 1);
-        }
-        return Optional.of(index-1);
+    }
+
+    public int getNumberOfSheets() {
+        return numberOfSheets;
     }
 }
