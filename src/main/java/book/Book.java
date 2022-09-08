@@ -12,6 +12,9 @@ public class Book {
         this.signatures = signatures;
         pages = signatures.stream().mapToInt(Signature::getTotalNumberOfPages).sum();
         pageNumbers = new ArrayList<>(pages);
+    }
+
+    private void calculatePageSequence(List<Signature> signatures) {
         int runningPageNumbers = 0;
         for (Signature signature : signatures) {
             final int pagesInSignature = signature.getTotalNumberOfPages();
@@ -27,6 +30,9 @@ public class Book {
     }
 
     public int getPageNumber(int index) {
+        if(pageNumbers.size() == 0){
+            calculatePageSequence(signatures);
+        }
         try {
             return pageNumbers.get(index);
         } catch (IndexOutOfBoundsException e) {
