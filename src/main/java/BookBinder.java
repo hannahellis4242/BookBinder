@@ -1,14 +1,20 @@
-import java.util.Arrays;
-
 public class BookBinder {
-    public static void main(String[] args) {
-        Command command = new HelpCommand();
-        System.out.println(Arrays.stream(args).reduce("- ", (acc, x) -> acc + x + ","));
-        if (args.length != 0) {
-            final var commandStr = args[0].toLowerCase();
-            command = commandStr.equals("book") ? new BookCommand() : command;
-            command = commandStr.equals("pages") ? new PagesCommand() : command;
+    static String getCommandString(String[] args) {
+        return args.length != 0 ? args[0].toLowerCase() : "help";
+    }
+
+    static Command getCommand(String str) {
+        switch (str) {
+            case "book":
+                return new BookCommand();
+            case "pages":
+                return new PagesCommand();
+            default:
+                return new HelpCommand();
         }
-        command.run(args);
+    }
+
+    public static void main(String[] args) {
+        getCommand(getCommandString(args)).run(args);
     }
 }
