@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SignatureTest {
     private static Stream<Arguments> testPagesParamsProvider() {
@@ -24,8 +25,12 @@ class SignatureTest {
     @ParameterizedTest
     @MethodSource("testPagesParamsProvider")
     void whenGivenANumberOfSheetsShouldReturnTheCorrectNumberOfPages(int numberOfSheets, Optional<Integer> expectedPages) {
-        var pages = Signature.withNumberOfSheets(numberOfSheets).map(Signature::getTotalNumberOfPages);
-        assertEquals(expectedPages, pages);
+        if (expectedPages.isPresent()) {
+            final var pages = new Signature(numberOfSheets).getTotalNumberOfPages();
+            assertEquals(expectedPages.get(), pages);
+        } else {
+            assertThrows(IllegalArgumentException.class, () -> new Signature(numberOfSheets));
+        }
     }
 
     private static Stream<Arguments> testPageParamsProvider() {
@@ -104,7 +109,7 @@ class SignatureTest {
     @ParameterizedTest
     @MethodSource("testPageParamsProvider")
     void whenGivenNumberOfSheetsAndAPageIndexShouldGiveCorrectPageNumber(int sheets, int index, Optional<Integer> expectedPageNumber) {
-        var pageNumber = Signature.withNumberOfSheets(sheets).flatMap(s -> s.pageNumber(index));
+        final var pageNumber = new Signature(sheets).pageNumber(index);
         assertEquals(expectedPageNumber, pageNumber);
     }
 }

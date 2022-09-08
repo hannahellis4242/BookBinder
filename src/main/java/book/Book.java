@@ -33,4 +33,22 @@ public class Book {
             return -1;
         }
     }
+
+    public List<Signature> getSignatures() {
+        return signatures;
+    }
+
+    public String show() {
+        var outputBuilder = new StringBuilder();
+        outputBuilder.append("A signature of ");
+        for (Signature signature : signatures) {
+            outputBuilder.append(signature.getNumberOfSheets());
+            outputBuilder.append(" ");
+        }
+        outputBuilder.append("gives ");
+        outputBuilder.append(pages);
+        outputBuilder.append(" pages.");
+        outputBuilder.append("\n");
+        return outputBuilder.toString();
+    }
 }

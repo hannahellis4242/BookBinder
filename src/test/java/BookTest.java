@@ -9,7 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class BookTest {
     @Test
     void testBook() {
-        final var book = new Book(List.of(Signature.withNumberOfSheets(2).get(), Signature.withNumberOfSheets(2).get()));
+        final var book = new Book(List.of(new Signature(2),
+                new Signature(2)));
         final var pages = book.getTotalNumberOfPages();
         for (int i = 0; i < pages; ++i) {
             System.out.println("page " + i + " should be " + book.getPageNumber(i));

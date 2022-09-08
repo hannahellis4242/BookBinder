@@ -9,15 +9,10 @@ public class Signature {
     private final int totalNumberOfPages;
     private final List<Integer> pageSequence;
 
-    private static Optional<Integer> positiveOrNone(int x) {
-        return (x > 0 ? Optional.of(x) : Optional.empty());
-    }
-
-    public static Optional<Signature> withNumberOfSheets(int numberOfSheets) {
-        return positiveOrNone(numberOfSheets).map(Signature::new);
-    }
-
-    private Signature(int numberOfSheets) {
+    public Signature(int numberOfSheets) {
+        if (numberOfSheets <= 0) {
+            throw new IllegalArgumentException("a signature cannot be made from less than one sheet");
+        }
         this.numberOfSheets = numberOfSheets;
         totalNumberOfPages = 4 * numberOfSheets;
         pageSequence = new ArrayList<>(totalNumberOfPages);

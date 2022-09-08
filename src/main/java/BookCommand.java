@@ -1,23 +1,57 @@
 import book.Book;
+import book.Signature;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class BookCommand implements Command {
-    static class BookTree {
-        Map<BookBuilder, BookBuilder> childToParentMap;
-        List<BookBuilder> leaves;
+    public static class BookSignatureOptions {
+        final private Signature signature;
+        private List<BookSignatureOptions> children;
 
-        private BookTree(BookBuilder root) {
+        private void initChildren(int numberOfPages) {
+            if (numberOfPages > 0) {
+                children = IntStream.range(3, 6)
+                        .mapToObj(Signature::new)
+                        .map(s -> new BookSignatureOptions(numberOfPages - s.getTotalNumberOfPages(), s))
+                        .collect(Collectors.toList());
+            } else {
+                children = new ArrayList<>();
+            }
+        }
+
+        public BookSignatureOptions(int numberOfPages) {
+            this.signature = null;
+            initChildren(numberOfPages);
+        }
+
+        private BookSignatureOptions(int numberOfPages, Signature signature) {
+            this.signature = signature;
+            initChildren(numberOfPages);
+        }
+
+        public Optional<Signature> getSignature() {
+            return signature != null ? Optional.of(signature) : Optional.empty();
+        }
+
+        public List<BookSignatureOptions> getChildren() {
+            return children;
+        }
+    }
+
+    static class BookTree {
+        Map<BookSignatureOptions, BookSignatureOptions> childToParentMap;
+        List<BookSignatureOptions> leaves;
+
+        private BookTree(BookSignatureOptions root) {
             childToParentMap = new HashMap<>();
             leaves = new ArrayList<>();
             build(root);
         }
-        private void build(BookBuilder parent) {
+
+        private void build(BookSignatureOptions parent) {
             if (parent.getChildren().size() == 0) {
                 leaves.add(parent);
                 return;
@@ -27,34 +61,46 @@ public class BookCommand implements Command {
                 build(child);
             });
         }
-        private BookBuilder findParent(BookBuilder child){
+
+        private BookSignatureOptions findParent(BookSignatureOptions child) {
             return childToParentMap.getOrDefault(child, null);
         }
-        private List<Integer> buildList(BookBuilder child){
+
+        private List<Signature> buildList(BookSignatureOptions child) {
             final var signature = child.getSignature();
             final var parent = findParent(child);
-            final var thisList = signature.map(value -> List.of(value.getNumberOfSheets())).orElseGet(ArrayList::new);
-            return parent == null ? thisList: Stream.concat(buildList(parent).stream(),thisList.stream()).collect(Collectors.toList());
+            final var thisList = signature.map(value -> List.of(value)).orElseGet(ArrayList::new);
+            return parent == null ? thisList : Stream.concat(buildList(parent).stream(), thisList.stream()).collect(Collectors.toList());
         }
-        List<List<Integer>> getSignatureList(){
-            return leaves.stream().map(this::buildList).collect(Collectors.toList());
+
+        List<Book> getBookList() {
+            return leaves.stream()
+                    .map(this::buildList)
+                    .map(Book::new)
+                    .collect(Collectors.toList());
         }
     }
+
+    private Optional<Integer> getOptionalArg(int index, String[] args) {
+        try {
+            return Optional.of(Integer.parseInt(args[index]));
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            return Optional.empty();
+        }
+    }
+
     public void run(String[] args) {
         try {
             final var pages = Integer.parseInt(args[1]);
-            final var book = BookBuilder.build(pages);
-            if (book.isEmpty()) {
-                System.out.println("no valid book found");
-                System.exit(0);
-            }
-            final var tree = new BookTree(book.get());
-            final var signatureList = tree.getSignatureList();
-            final var output = signatureList.stream()
-                    .map(list->list.stream()
-                            .map(Object::toString)
-                            .reduce("",(acc, x)->acc+x+" "))
-                    .reduce("",(acc, x)->acc+x+"\n");
+            final var max = getOptionalArg(2, args).orElse(5);
+            final var options = new BookSignatureOptions(pages);
+            final var tree = new BookTree(options);
+            final var books = tree.getBookList();
+            var output = books.stream()
+                    .sorted(this::byPagesThenByNumberOfSignatures)
+                    .limit(max)
+                    .map(Book::show)
+                    .reduce("", (acc, x) -> acc + x);
             System.out.println(output);
         } catch (NumberFormatException e) {
             System.out.println("number of pages argument should be a number");
@@ -63,5 +109,13 @@ public class BookCommand implements Command {
             System.out.println("number of pages argument missing");
             System.out.println("run with help to get more information");
         }
+    }
+
+    private int byPagesThenByNumberOfSignatures(Book a, Book b) {
+        final var value = a.getTotalNumberOfPages() - b.getTotalNumberOfPages();
+        if (value == 0) {
+            return a.getSignatures().size() - b.getSignatures().size();
+        }
+        return value;
     }
 }
