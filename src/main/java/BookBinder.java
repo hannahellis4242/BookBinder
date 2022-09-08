@@ -1,3 +1,8 @@
+import command.BookCommand;
+import command.Command;
+import command.HelpCommand;
+import command.PagesCommand;
+
 public class BookBinder {
     static String getCommandString(String[] args) {
         return args.length != 0 ? args[0].toLowerCase() : "help";

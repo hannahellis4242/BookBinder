@@ -1,3 +1,7 @@
+package command;
+
+import command.Command;
+
 public class HelpCommand implements Command {
     @Override
     public void run(String[] args) {

@@ -1,5 +1,8 @@
+package command;
+
 import book.Book;
 import book.Signature;
+import command.Command;
 
 import java.util.*;
 import java.util.stream.Collectors;
