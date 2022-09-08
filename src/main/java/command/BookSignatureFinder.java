@@ -2,35 +2,46 @@ package command;
 
 import book.Book;
 import book.Signature;
-import command.Command;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class BookCommand implements Command {
+public class BookSignatureFinder {
     public static class BookSignatureOptions {
         final private Signature signature;
+        private final int minSignatureSize;
+        private final int maxSignatureSize;
         private List<BookSignatureOptions> children;
 
         private void initChildren(int numberOfPages) {
             if (numberOfPages > 0) {
-                children = IntStream.range(3, 6)
+                children = IntStream.range(minSignatureSize, maxSignatureSize + 1)
                         .mapToObj(Signature::new)
-                        .map(s -> new BookSignatureOptions(numberOfPages - s.getTotalNumberOfPages(), s))
+                        .map(s -> new BookSignatureOptions(numberOfPages - s.getTotalNumberOfPages(),
+                                minSignatureSize,
+                                maxSignatureSize,
+                                s))
                         .collect(Collectors.toList());
             } else {
                 children = new ArrayList<>();
             }
         }
 
-        public BookSignatureOptions(int numberOfPages) {
+        public BookSignatureOptions(int numberOfPages, int minSignatureSize, int maxSignatureSize) {
+            this.minSignatureSize = minSignatureSize;
+            this.maxSignatureSize = maxSignatureSize;
             this.signature = null;
             initChildren(numberOfPages);
         }
 
-        private BookSignatureOptions(int numberOfPages, Signature signature) {
+        private BookSignatureOptions(int numberOfPages,
+                                     int minSignatureSize,
+                                     int maxSignatureSize,
+                                     Signature signature) {
+            this.minSignatureSize = minSignatureSize;
+            this.maxSignatureSize = maxSignatureSize;
             this.signature = signature;
             initChildren(numberOfPages);
         }
@@ -92,26 +103,32 @@ public class BookCommand implements Command {
         }
     }
 
-    public void run(String[] args) {
+    public List<Book> search(int pages,
+                             int maxOptions,
+                             int minSignatureSize,
+                             int maxSignatureSize,
+                             Log logger) {
+        logger.add("Signature options for a book of " + pages + " pages.");
         try {
-            final var pages = Integer.parseInt(args[1]);
-            final var max = getOptionalArg(2, args).orElse(5);
-            final var options = new BookSignatureOptions(pages);
+            final var options = new BookSignatureOptions(pages, minSignatureSize, maxSignatureSize);
             final var tree = new BookTree(options);
-            final var books = tree.getBookList();
-            var output = books.stream()
+            final var books = tree.getBookList().stream()
                     .sorted(this::byPagesThenByNumberOfSignatures)
-                    .limit(max)
+                    .limit(maxOptions)
+                    .collect(Collectors.toList());
+            var output = books.stream()
                     .map(Book::show)
                     .reduce("", (acc, x) -> acc + x);
-            System.out.println(output);
+            logger.add(output + "\n");
+            return books;
         } catch (NumberFormatException e) {
-            System.out.println("number of pages argument should be a number");
-            System.out.println("run with help to get more information");
+            logger.add("number of pages argument should be a number\n");
+            logger.add("search with help to get more information\n");
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("number of pages argument missing");
-            System.out.println("run with help to get more information");
+            logger.add("number of pages argument missing\n");
+            logger.add("search with help to get more information\n");
         }
+        return new ArrayList<>();
     }
 
     private int byPagesThenByNumberOfSignatures(Book a, Book b) {

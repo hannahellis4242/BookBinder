@@ -2,6 +2,7 @@ package book;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Book {
     private final List<Signature> signatures;
@@ -30,7 +31,7 @@ public class Book {
     }
 
     public int getPageNumber(int index) {
-        if(pageNumbers.size() == 0){
+        if (pageNumbers.size() == 0) {
             calculatePageSequence(signatures);
         }
         try {
@@ -38,6 +39,12 @@ public class Book {
         } catch (IndexOutOfBoundsException e) {
             return -1;
         }
+    }
+
+    public IntStream getPageOrderStream() {
+        return IntStream.range(0, getTotalNumberOfPages())
+                .map(this::getPageNumber)
+                .map(i -> i + 1);
     }
 
     public List<Signature> getSignatures() {
