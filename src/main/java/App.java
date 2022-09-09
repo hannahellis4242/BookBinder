@@ -97,9 +97,10 @@ public class App {
                             Path file = Paths.get(fileToSave.getAbsolutePath());
                             Files.write(file, lines, StandardCharsets.UTF_8);
                         } catch (Exception except) {
-                            JOptionPane pane = new JOptionPane();
-                            pane.setMessage(except.getMessage());
-                            pane.setVisible(true);
+                            JOptionPane.showMessageDialog(null,
+                                    except.getMessage(),
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
@@ -253,9 +254,10 @@ public class App {
                 try {
                     pages.run(input, output, signatures);
                 } catch (Exception exception) {
-                    JOptionPane pane = new JOptionPane();
-                    pane.setMessage(exception.getMessage());
-                    pane.setVisible(true);
+                    JOptionPane.showMessageDialog(null,
+                            exception.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             });
         }
