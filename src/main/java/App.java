@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -253,9 +254,19 @@ public class App {
                         .toArray();
                 try {
                     pages.run(input, output, signatures);
-                } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(null,
+                    JOptionPane.showMessageDialog(mainPanel,
+                            "pdf created successfully",
+                            "Success",
+                            JOptionPane.PLAIN_MESSAGE);
+                } catch (IOException exception) {
+                    JOptionPane.showMessageDialog(mainPanel,
                             exception.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                catch(InterruptedException exception){
+                    JOptionPane.showMessageDialog(mainPanel,
+                            "could not complete operation",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }

@@ -45,7 +45,7 @@ public class Pages {
         final var book = new Book(Arrays.stream(signatures).mapToObj(Signature::new).collect(Collectors.toList()));
         final var pageOrder = book.getPageOrderStream().toArray();
         List<String> command = new ArrayList<>();
-        command.add("pdftk.exe");
+        command.add("pdftk");//This might need to change based on operating system
         command.add(input.toString());
         command.add("cat");
         for (final var page : pageOrder) {
@@ -56,6 +56,6 @@ public class Pages {
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.redirectErrorStream(true);
         Process process = builder.start();
-        process.wait();
+        process.waitFor();
     }
 }
