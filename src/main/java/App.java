@@ -1,5 +1,4 @@
 import command.BookSignatureFinder;
-import command.OutputLog;
 import command.Pages;
 
 import javax.swing.*;
@@ -278,8 +277,8 @@ public class App {
         bookButton.addActionListener((e) -> {
             final var pages = Integer.parseInt(pagesInput.getText());
             final var maximum = Integer.parseInt(maxOptionsInput.getText());
-            final var finder = new BookSignatureFinder();
-            finder.search(pages, maximum, minSlider.getValue(), maxSlider.getValue(), new OutputLog(output));
+            final var text = new BookSignatureFinder().search(pages, maximum, minSlider.getValue(), maxSlider.getValue());
+            output.setText(text);
         });
         final var listener = new DocumentListener() {
             private void updateButton() {

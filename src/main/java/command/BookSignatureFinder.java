@@ -94,12 +94,12 @@ public class BookSignatureFinder {
                     .collect(Collectors.toList());
         }
     }
-    public void search(int pages,
+    public String search(int pages,
                        int maxOptions,
                        int minSignatureSize,
-                       int maxSignatureSize,
-                       Log logger) {
-        logger.add("Signature options for a book of " + pages + " pages.");
+                       int maxSignatureSize) {
+        var outputBuilder = new StringBuilder();
+        outputBuilder.append("Signature options for a book of ").append(pages).append(" pages.\n\n");
         try {
             final var options = new BookSignatureOptions(pages, minSignatureSize, maxSignatureSize);
             final var tree = new BookTree(options);
@@ -110,14 +110,13 @@ public class BookSignatureFinder {
             var output = books.stream()
                     .map(Book::show)
                     .reduce("", (acc, x) -> acc + x);
-            logger.add(output + "\n");
+            outputBuilder.append(output).append("\n");
         } catch (NumberFormatException e) {
-            logger.add("number of pages argument should be a number\n");
-            logger.add("search with help to get more information\n");
+            outputBuilder.append("number of pages argument should be a number\n").append("search with help to get more information\n");
         } catch (IndexOutOfBoundsException e) {
-            logger.add("number of pages argument missing\n");
-            logger.add("search with help to get more information\n");
+            outputBuilder.append("number of pages argument missing\n").append("search with help to get more information\n");
         }
+        return outputBuilder.toString();
     }
 
     private int byPagesThenByNumberOfSignatures(Book a, Book b) {
