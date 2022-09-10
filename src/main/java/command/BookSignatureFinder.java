@@ -83,7 +83,7 @@ public class BookSignatureFinder {
         private List<Signature> buildList(BookSignatureOptions child) {
             final var signature = child.getSignature();
             final var parent = findParent(child);
-            final var thisList = signature.map(value -> List.of(value)).orElseGet(ArrayList::new);
+            final var thisList = signature.map(List::of).orElseGet(ArrayList::new);
             return parent == null ? thisList : Stream.concat(buildList(parent).stream(), thisList.stream()).collect(Collectors.toList());
         }
 
@@ -94,20 +94,11 @@ public class BookSignatureFinder {
                     .collect(Collectors.toList());
         }
     }
-
-    private Optional<Integer> getOptionalArg(int index, String[] args) {
-        try {
-            return Optional.of(Integer.parseInt(args[index]));
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            return Optional.empty();
-        }
-    }
-
-    public List<Book> search(int pages,
-                             int maxOptions,
-                             int minSignatureSize,
-                             int maxSignatureSize,
-                             Log logger) {
+    public void search(int pages,
+                       int maxOptions,
+                       int minSignatureSize,
+                       int maxSignatureSize,
+                       Log logger) {
         logger.add("Signature options for a book of " + pages + " pages.");
         try {
             final var options = new BookSignatureOptions(pages, minSignatureSize, maxSignatureSize);
@@ -120,7 +111,6 @@ public class BookSignatureFinder {
                     .map(Book::show)
                     .reduce("", (acc, x) -> acc + x);
             logger.add(output + "\n");
-            return books;
         } catch (NumberFormatException e) {
             logger.add("number of pages argument should be a number\n");
             logger.add("search with help to get more information\n");
@@ -128,7 +118,6 @@ public class BookSignatureFinder {
             logger.add("number of pages argument missing\n");
             logger.add("search with help to get more information\n");
         }
-        return new ArrayList<>();
     }
 
     private int byPagesThenByNumberOfSignatures(Book a, Book b) {
