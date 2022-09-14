@@ -16,6 +16,9 @@ public class Signature {
         this.numberOfSheets = numberOfSheets;
         totalNumberOfPages = 4 * numberOfSheets;
         pageSequence = new ArrayList<>(totalNumberOfPages);
+    }
+
+    private void calculatePageSequence() {
         int index = 0;
         int next = totalNumberOfPages - 1;
         while (index < totalNumberOfPages) {
@@ -37,6 +40,9 @@ public class Signature {
     }
 
     public Optional<Integer> pageNumber(int index) {
+        if(pageSequence.size() == 0){
+            calculatePageSequence();
+        }
         try {
             return Optional.of(pageSequence.get(index));
         } catch (IndexOutOfBoundsException e) {
