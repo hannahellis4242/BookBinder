@@ -2,6 +2,8 @@ package book.signature;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.Collectors;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -18,9 +20,9 @@ class SignatureOptionsBuilderTest {
         assertThat(options.size(), equalTo(16));
         options.forEach(opt -> assertThat(opt.getTotalNumberOfPages(), greaterThanOrEqualTo(targetNumberOfPages)));
 
-        final var sortedOptions = options.stream().sorted(Option::compareTo).toList();
+        final var sortedOptions = options.stream().sorted(Option::compareTo).collect(Collectors.toList());
         assertThat(sortedOptions.size(), equalTo(options.size()));
-        final var unique = sortedOptions.stream().distinct().toList();
+        final var unique = sortedOptions.stream().distinct().collect(Collectors.toList());
         assertThat("obtained options are unique", unique.size(), equalTo(options.size()));
     }
 }

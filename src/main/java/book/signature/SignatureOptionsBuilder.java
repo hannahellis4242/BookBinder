@@ -4,7 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SignatureOptionsBuilder {
-    private record Parameters(int target, int min, int max) {
+    private static class Parameters {
+        public final int target;
+        public final int min;
+        public final int max;
+
+        Parameters(int target, int min, int max) {
+            this.target = target;
+            this.min = min;
+            this.max = max;
+        }
     }
 
     private static int[] root() {

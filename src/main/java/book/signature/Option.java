@@ -2,6 +2,7 @@ package book.signature;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -41,7 +42,7 @@ public class Option implements Comparable<Option> {
 
     @Override
     public int compareTo(Option other) {
-        final var allKeys = Stream.concat(signatureCounts.keySet().stream(), other.signatureCounts.keySet().stream()).toList();
+        final var allKeys = Stream.concat(signatureCounts.keySet().stream(), other.signatureCounts.keySet().stream()).collect(Collectors.toList());
         final int max = allKeys.stream().max(Integer::compareTo).orElse(1);
         final var thisArray = this.toArray(1, max);
         final var otherArray = other.toArray(1, max);
