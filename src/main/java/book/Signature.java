@@ -40,7 +40,7 @@ public class Signature {
     }
 
     public Optional<Integer> pageNumber(int index) {
-        if(pageSequence.size() == 0){
+        if (pageSequence.size() == 0) {
             calculatePageSequence();
         }
         try {

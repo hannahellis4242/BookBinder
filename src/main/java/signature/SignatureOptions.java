@@ -1,7 +1,7 @@
 package signature;
 
 public class SignatureOptions {
-    public int numberOfOptions(){
+    public int numberOfOptions() {
         return 0;
     }
 }

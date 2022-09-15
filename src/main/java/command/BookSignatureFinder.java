@@ -94,10 +94,11 @@ public class BookSignatureFinder {
                     .collect(Collectors.toList());
         }
     }
+
     public String search(int pages,
-                       int maxOptions,
-                       int minSignatureSize,
-                       int maxSignatureSize) {
+                         int maxOptions,
+                         int minSignatureSize,
+                         int maxSignatureSize) {
         var outputBuilder = new StringBuilder();
         outputBuilder.append("Signature options for a book of ").append(pages).append(" pages.\n\n");
         try {
@@ -106,7 +107,7 @@ public class BookSignatureFinder {
             final var books = tree.getBookList().stream()
                     .sorted(this::byPagesThenByNumberOfSignatures)
                     .limit(maxOptions)
-                    .collect(Collectors.toList());
+                    .toList();
             var output = books.stream()
                     .map(Book::show)
                     .reduce("", (acc, x) -> acc + x);

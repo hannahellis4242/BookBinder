@@ -262,8 +262,7 @@ public class App {
                             exception.getMessage(),
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
-                }
-                catch(InterruptedException exception){
+                } catch (InterruptedException exception) {
                     JOptionPane.showMessageDialog(mainPanel,
                             "could not complete operation",
                             "Error",

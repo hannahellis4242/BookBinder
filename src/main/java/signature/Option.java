@@ -24,4 +24,12 @@ public class Option {
                 entry.getValue() * new Signature(entry.getKey()).getTotalNumberOfPages()
         ).sum();
     }
+
+    public String show() {
+        return signatureCounts.entrySet().stream().map(entry ->
+                entry.getKey() +
+                        " -> " +
+                        entry.getValue() +
+                        "\n").reduce("",(acc, x)->acc+x);
+    }
 }
