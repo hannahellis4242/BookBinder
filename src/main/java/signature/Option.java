@@ -2,9 +2,12 @@ package signature;
 
 import book.Signature;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class Option {
+public class Option implements Comparable<Option> {
     private final Map<Integer, Integer> signatureCounts;
 
     public Option(Map<Integer, Integer> signatureCounts) {
@@ -36,5 +39,14 @@ public class Option {
                         entry.getValue() +
                         "\n").reduce("", (acc, x) -> acc + x) +
                 "pages : " + getTotalNumberOfPages();
+    }
+
+    @Override
+    public int compareTo(Option other) {
+        final var allKeys = Stream.concat(signatureCounts.keySet().stream(), other.signatureCounts.keySet().stream()).toList();
+        final int max = allKeys.stream().max(Integer::compareTo).orElse(1);
+        final var thisArray = this.toArray(1, max);
+        final var otherArray = other.toArray(1, max);
+        return Arrays.compare(thisArray, otherArray);
     }
 }

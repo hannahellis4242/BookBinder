@@ -14,7 +14,7 @@ public class Signature {
             throw new IllegalArgumentException("a signature cannot be made from less than one sheet");
         }
         this.numberOfSheets = numberOfSheets;
-        totalNumberOfPages = 4 * numberOfSheets;
+        totalNumberOfPages = getTotalNumberOfPages(numberOfSheets);
         pageSequence = new ArrayList<>(totalNumberOfPages);
     }
 
@@ -37,6 +37,10 @@ public class Signature {
 
     public int getTotalNumberOfPages() {
         return totalNumberOfPages;
+    }
+
+    public static int getTotalNumberOfPages(int numberOfSheets) {
+        return 4 * numberOfSheets;
     }
 
     public Optional<Integer> pageNumber(int index) {
