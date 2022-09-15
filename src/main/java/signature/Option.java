@@ -25,6 +25,10 @@ public class Option {
         ).sum();
     }
 
+    public int[] toArray(int min, int max) {
+        return IntStream.range(min, max + 1).map(this::getNumberOfSignatureSized).toArray();
+    }
+
     public String show() {
         return signatureCounts.entrySet().stream().map(entry ->
                 entry.getKey() +

@@ -41,4 +41,9 @@ class OptionTest {
     void whenGettingTheNumberOfPagesInAnOption() {
         assertThat("it should give 56", option.getTotalNumberOfPages(), equalTo(56));
     }
+
+    @Test
+    void whenCallingToArray() {
+        assertThat(Arrays.stream(option.toArray(3, 5)).boxed().toArray(), arrayContaining(0, 1, 2));
+    }
 }
