@@ -1,4 +1,4 @@
-package signature;
+package book.signature;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class OptionBuilder {
         return arr[index];
     }
 
-    OptionBuilder fromArray(int min, int max, int... arr) {
+    public OptionBuilder fromArray(int min, int max, int... arr) {
         if (min > max) {
             throw new IllegalArgumentException("minimum value given is larger than the maximum value given");
         }
@@ -42,7 +42,7 @@ public class OptionBuilder {
         return this;
     }
 
-    Option build() {
+    public Option build() {
         return new Option(signatureCounts);
     }
 }

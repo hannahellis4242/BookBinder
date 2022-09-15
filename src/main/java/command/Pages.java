@@ -1,7 +1,7 @@
 package command;
 
 import book.Book;
-import book.Signature;
+import book.signature.Signature;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -36,7 +36,7 @@ public class Pages {
         outputBuilder.append("\n The printed page order goes as follows");
         outputBuilder.append(output);
         outputBuilder.append("\n\nThe following command below can be used with pdftk to create a pdf with pages in the right order\n");
-        outputBuilder.append("pdftk.exe <filename> cat " + output + " output out.pdf\n");
+        outputBuilder.append("pdftk.exe <filename> cat ").append(output).append(" output out.pdf\n");
         outputBuilder.append("replace <filename> with the name of your file\n");
         return outputBuilder.toString();
     }

@@ -1,6 +1,4 @@
-package signature;
-
-import book.Signature;
+package book.signature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +7,16 @@ public class SignatureOptionsBuilder {
     private record Parameters(int target, int min, int max) {
     }
 
-    static int[] root() {
+    private static int[] root() {
         return new int[]{};
     }
 
-    static boolean accept(Parameters p, int... candidate) {
+    private static boolean accept(Parameters p, int... candidate) {
         final var option = new OptionBuilder().fromArray(p.min, p.max, candidate).build();
         return option.getTotalNumberOfPages() >= p.target;
     }
 
-    static int[] first(Parameters p, int... candidate) {
+    private static int[] first(Parameters p, int... candidate) {
         if (candidate.length > p.max - p.min) {
             return null;
         }
@@ -28,7 +26,7 @@ public class SignatureOptionsBuilder {
         return out;
     }
 
-    static int[] next(Parameters p, int... candidate) {
+    private static int[] next(Parameters p, int... candidate) {
         var out = candidate.clone();
         out[out.length - 1] += 1;
         final var option = new OptionBuilder().fromArray(p.min, p.max, out).build();
@@ -58,14 +56,14 @@ public class SignatureOptionsBuilder {
     List<Option> options;
     Parameters parameters;
 
-    SignatureOptionsBuilder(int targetNumberOfPages,
-                            int minSignatureSize,
-                            int maxSignatureSize) {
+    public SignatureOptionsBuilder(int targetNumberOfPages,
+                                   int minSignatureSize,
+                                   int maxSignatureSize) {
         parameters = new Parameters(targetNumberOfPages, minSignatureSize, maxSignatureSize);
         options = new ArrayList<>();
     }
 
-    List<Option> build() {
+    public List<Option> build() {
         if (options.size() == 0) {
             backtrack(parameters, root());
         }

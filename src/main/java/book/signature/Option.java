@@ -1,6 +1,4 @@
-package signature;
-
-import book.Signature;
+package book.signature;
 
 import java.util.Arrays;
 import java.util.Map;

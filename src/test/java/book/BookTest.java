@@ -1,5 +1,6 @@
-import book.Book;
-import book.Signature;
+package book;
+
+import book.signature.Signature;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

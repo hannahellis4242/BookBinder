@@ -1,4 +1,4 @@
-package signature;
+package book.signature;
 
 import org.junit.jupiter.api.Test;
 
