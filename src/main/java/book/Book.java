@@ -1,6 +1,7 @@
 package book;
 
 import book.signature.Option;
+import book.signature.OptionBuilder;
 import book.signature.Signature;
 
 import java.util.ArrayList;
@@ -65,17 +66,9 @@ public class Book {
         return signatures;
     }
 
-    public String show() {
-        var outputBuilder = new StringBuilder();
-        outputBuilder.append("A signature of ");
-        for (Signature signature : signatures) {
-            outputBuilder.append(signature.getNumberOfSheets());
-            outputBuilder.append(" ");
-        }
-        outputBuilder.append("gives ");
-        outputBuilder.append(pages);
-        outputBuilder.append(" pages.");
-        outputBuilder.append("\n");
-        return outputBuilder.toString();
+    public Option getOption() {
+        var builder = new OptionBuilder();
+        signatures.forEach(s -> builder.add(s.getNumberOfSheets()));
+        return builder.build();
     }
 }

@@ -1,3 +1,5 @@
+package utils;
+
 import java.util.regex.Pattern;
 
 public class StringUtils {
@@ -8,5 +10,9 @@ public class StringUtils {
             return false;
         }
         return pattern.matcher(strNum).matches();
+    }
+
+    public static String plural(String str, int number) {
+        return number != 1 ? str + "s" : str;
     }
 }

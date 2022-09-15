@@ -3,12 +3,36 @@ package command;
 import book.Book;
 import book.signature.Option;
 import book.signature.SignatureOptionsBuilder;
+import utils.StringUtils;
+
+import java.util.Arrays;
 
 public class BookSignatureFinder {
-    public String search(int pages,
-                         int maxOptions,
-                         int minSignatureSize,
-                         int maxSignatureSize) {
+    private static String show(Book book) {
+        var outputBuilder = new StringBuilder();
+        final var option = book.getOption();
+        outputBuilder.append("A book with ");
+        outputBuilder.append(Arrays.stream(option.getSignatureSizes())
+                .mapToObj(size -> {
+                    final var number = option.getNumberOfSignatureSized(size);
+                    return number
+                            + StringUtils.plural(" signature", number)
+                            + " of " + size
+                            + StringUtils.plural(" sheet", size)+" ";
+                })
+                .reduce((acc, x) -> acc + " and " + x).orElse("no signatures")
+        );
+        outputBuilder.append("gives ")
+                .append(book.getTotalNumberOfPages())
+                .append(" pages.")
+                .append("\n");
+        return outputBuilder.toString();
+    }
+
+    public String createReport(int pages,
+                               int maxOptions,
+                               int minSignatureSize,
+                               int maxSignatureSize) {
         var outputBuilder = new StringBuilder();
         outputBuilder.append("Signature options for a book of ").append(pages).append(" pages.\n\n");
         final var output = new SignatureOptionsBuilder(pages, minSignatureSize, maxSignatureSize)
@@ -17,7 +41,7 @@ public class BookSignatureFinder {
                 .sorted(this::byPagesThenByNumberOfSignatures)
                 .limit(maxOptions)
                 .map(Book::fromOption)
-                .map(Book::show)
+                .map(BookSignatureFinder::show)
                 .reduce("", (acc, x) -> acc + x);
         outputBuilder.append(output).append("\n");
         return outputBuilder.toString();
