@@ -1,5 +1,8 @@
 package book;
 
+import book.signature.Option;
+import book.signature.Signature;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -8,6 +11,17 @@ public class Book {
     private final List<Signature> signatures;
     private final int pages;
     private final List<Integer> pageNumbers;
+
+    public static Book fromOption(Option option) {
+        var signatures = new ArrayList<Signature>();
+        for (var size : option.getSignatureSizes()) {
+            final var number = option.getNumberOfSignatureSized(size);
+            for (int i = 0; i < number; ++i) {
+                signatures.add(new Signature(size));
+            }
+        }
+        return new Book(signatures);
+    }
 
     public Book(List<Signature> signatures) {
         this.signatures = signatures;
@@ -20,7 +34,7 @@ public class Book {
         for (Signature signature : signatures) {
             final int pagesInSignature = signature.getTotalNumberOfPages();
             for (int i = 0; i < pagesInSignature; ++i) {
-                pageNumbers.add(runningPageNumbers + signature.pageNumber(i).get());
+                pageNumbers.add(runningPageNumbers + signature.pageNumber(i).orElse(-1));
             }
             runningPageNumbers += pagesInSignature;
         }
