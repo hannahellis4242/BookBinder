@@ -3,7 +3,7 @@ package signature;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 class SignatureOptionsBuilderTest {
     @Test
@@ -14,6 +14,8 @@ class SignatureOptionsBuilderTest {
         final var options = new SignatureOptionsBuilder(targetNumberOfPages,
                 minimumSheetsPerSignature,
                 maximumSheetsPerSignature).build();
+        assertThat(options.size(),equalTo(27));
+        options.forEach(opt-> assertThat(opt.getTotalNumberOfPages(),greaterThanOrEqualTo(targetNumberOfPages)));
         //assertThat(options.size(), equalTo(2));
         for(final var option:options){
             System.out.println(option.show());

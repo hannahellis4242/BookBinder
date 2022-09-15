@@ -30,6 +30,7 @@ public class Option {
                 entry.getKey() +
                         " -> " +
                         entry.getValue() +
-                        "\n").reduce("",(acc, x)->acc+x);
+                        "\n").reduce("", (acc, x) -> acc + x) +
+                "pages : " + getTotalNumberOfPages();
     }
 }
